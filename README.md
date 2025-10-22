@@ -1,52 +1,84 @@
-# Advent of Code 2025 - Automated Agentic Solver
+# Advent of Code 2025 - Autonomous Agentic Solver
 
-An experimental approach to Advent of Code using fully automated AI agents that solve puzzles using Test-Driven Development (TDD), with intelligent retry logic and minimal human intervention.
+A fully autonomous AI-powered system that solves Advent of Code 2025 puzzles using the **Claude Agent SDK**.
 
 ## Overview
 
-This project automates the entire Advent of Code workflow:
+This project uses **TypeScript + Claude Agent SDK** to create truly autonomous agents that:
 
-1. **Fetch** daily puzzles automatically using `aoc-cli`
-2. **Parse** puzzle descriptions to extract examples and requirements
-3. **Solve** using strict TDD methodology with iterative testing
-4. **Submit** answers with intelligent retry and failure analysis
-5. **Handle** edge cases when tests pass but submissions fail
+1. **Fetch** puzzles from adventofcode.com using `aoc-cli`
+2. **Parse** examples and extract test cases
+3. **Write Rust solutions** using Test-Driven Development
+4. **Run tests** iteratively until passing
+5. **Submit answers** with intelligent retry logic
+6. **Handle failures** by analyzing edge cases and re-implementing
 
-All orchestrated by Claude AI agents with specialized skills for each phase.
+The agents have **full developer autonomy** - they can modify files, run commands, write code, and manage the entire workflow without human intervention.
+
+## Architecture
+
+```
+TypeScript Agent (Claude SDK) - Orchestrator
+    ↓
+    ├── Puzzle Fetcher Agent (downloads & parses)
+    ├── TDD Solver Agent (writes Rust code)
+    └── Submission Handler Agent (submits & retries)
+```
+
+**Key Point:** The agents are written in TypeScript but have full autonomy to:
+- Write and edit Rust code
+- Run `cargo`, `aoc-cli`, and other CLI tools
+- Modify any files in the project
+- Submit answers autonomously
 
 ## Quick Start
 
 ### Prerequisites
 
 ```bash
-# Install Rust (if not already installed)
+# Install Bun (JavaScript runtime)
+curl -fsSL https://bun.sh/install | bash
+
+# Install Rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # Install aoc-cli
 cargo install aoc-cli
-
-# Set up your AoC session cookie
-echo "your_session_cookie_here" > ~/.adventofcode.session
 ```
 
-### Run the Demo
+### Installation
 
 ```bash
-# Build the project
-cargo build
+# Install dependencies
+bun install
 
-# Run tests to see TDD in action
-cargo test
+# Setup Anthropic API key
+export ANTHROPIC_API_KEY="your-api-key-here"
 
-# Run Day 1 solution
-cargo run -- 1
+# Make it persistent
+echo 'export ANTHROPIC_API_KEY="your-api-key-here"' >> ~/.bashrc
+
+# Setup AoC session cookie
+echo "your_session_cookie_here" > ~/.adventofcode.session
+
+# Verify setup
+bun run validate
 ```
 
-Expected output:
-```
-Day 1: Calorie Counting
-Part 1: 24000
-Part 2: 45000
+### Run the Autonomous Solver
+
+```bash
+# Solve today's puzzle (automatic day detection)
+bun run agent:run
+
+# Solve a specific day
+bun run agent:run-day 1
+
+# Dry run (don't submit)
+bun run agent:test --day 1
+
+# Debug mode
+bun run agent:debug --day 1
 ```
 
 ## Project Structure

@@ -87,19 +87,21 @@ if [ -f "$STATE_FILE" ]; then
     fi
 fi
 
-log "Running solver for Day $CURRENT_DAY..."
+log "Running autonomous agent solver for Day $CURRENT_DAY..."
 
-# Ensure cargo is in PATH
+# Ensure bun is in PATH
+export PATH="$HOME/.bun/bin:$PATH"
+
+# Ensure cargo is also in PATH (needed by the agent to run Rust code)
 export PATH="$HOME/.cargo/bin:$PATH"
 
-# For now, just run the simple day runner
-# TODO: Replace with actual orchestrator binary when implemented
-log "Running: cargo run -- $CURRENT_DAY"
+# Run the TypeScript autonomous agent
+log "Running: bun run $PROJECT_ROOT/src/agent/main.ts --day $CURRENT_DAY"
 
-if cargo run -- "$CURRENT_DAY" >> "$LOG_FILE" 2>&1; then
-    log "✅ Solver completed successfully for Day $CURRENT_DAY"
+if bun run "$PROJECT_ROOT/src/agent/main.ts" --day "$CURRENT_DAY" >> "$LOG_FILE" 2>&1; then
+    log "✅ Agent completed successfully for Day $CURRENT_DAY"
 else
-    log "❌ Solver failed for Day $CURRENT_DAY"
+    log "❌ Agent failed for Day $CURRENT_DAY"
     exit 1
 fi
 
