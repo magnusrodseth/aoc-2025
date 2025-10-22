@@ -1,0 +1,31 @@
+# Rust
+/target
+Cargo.lock
+
+# AOC session cookie (DO NOT COMMIT!)
+.adventofcode.session
+*.session
+
+# Logs
+logs/
+*.log
+
+# State files
+state/
+
+# Downloaded puzzles (may contain spoilers)
+puzzles/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Test outputs
+*.out
+*.tmp
