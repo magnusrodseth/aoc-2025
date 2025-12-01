@@ -33,5 +33,3 @@ puzzles/
 # Test outputs
 *.out
 *.tmp
-
-node_modules

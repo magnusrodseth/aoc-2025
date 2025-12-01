@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This repository represents an experimental approach to Advent of Code 2025, where the entire puzzle-solving workflow is fully automated using AI agents. Rather than manually solving each day's puzzle, this project builds a sophisticated automated system that can:
+This repository represents an experimental approach to Advent of Code 2025, where the entire puzzle-solving workflow is fully automated using Claude Code with custom skills. Rather than manually solving each day's puzzle, this project uses an AI-driven system that can:
 
 1. Fetch daily puzzles automatically
 2. Parse puzzle descriptions and extract test cases
@@ -15,9 +15,19 @@ This repository represents an experimental approach to Advent of Code 2025, wher
 
 - **Language**: Rust (all puzzle solutions implemented in Rust)
 - **CLI Tool**: `aoc-cli` - Command-line interface for programmatic interaction with adventofcode.com
-- **Automation**: Claude AI agents with custom skills
+- **Automation**: Claude Code with custom skills and slash commands
 - **Testing**: Rust's built-in test framework
-- **Scheduling**: Local cron job for daily execution
+
+## Usage
+
+Run the `/solve` slash command to trigger the automated solving workflow:
+
+```bash
+# Solve today's puzzle (or specify a day)
+/solve [day]
+```
+
+This triggers the aoc-orchestrator skill which coordinates the entire workflow.
 
 ## Architecture
 
@@ -25,7 +35,7 @@ This repository represents an experimental approach to Advent of Code 2025, wher
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      Daily Cron Trigger                      │
+│                    /solve command trigger                    │
 └──────────────────────┬──────────────────────────────────────┘
                        │
                        ▼
@@ -70,7 +80,7 @@ This repository represents an experimental approach to Advent of Code 2025, wher
               │                 │
               ▼                 ▼
     ┌─────────────────┐  ┌──────────────────┐
-    │  ✅ Correct     │  │  ❌ Incorrect    │
+    │  Correct        │  │  Incorrect       │
     │  Move to Part 2 │  │  Retry Logic     │
     └─────────────────┘  └────────┬─────────┘
                                   │
@@ -102,22 +112,15 @@ aoc-2025/
 ├── Cargo.toml                   # Rust project manifest
 ├── src/
 │   ├── lib.rs                   # Library code and utilities
-│   ├── main.rs                  # Main automation orchestrator
-│   ├── days/
-│   │   ├── mod.rs               # Days module
-│   │   ├── day01.rs             # Day 1 solution
-│   │   ├── day02.rs             # Day 2 solution
-│   │   └── ...                  # More days
-│   ├── parser/
-│   │   ├── mod.rs               # Puzzle parser
-│   │   └── example_extractor.rs # Extract test cases from examples
-│   ├── runner/
-│   │   ├── mod.rs               # Test runner and executor
-│   │   └── submission.rs        # Submission handler with retry logic
-│   └── utils/
-│       ├── mod.rs               # Utility functions
-│       └── input.rs             # Input parsing helpers
+│   ├── main.rs                  # CLI entry point
+│   └── days/
+│       ├── mod.rs               # Days module
+│       ├── day01.rs             # Day 1 solution
+│       ├── day02.rs             # Day 2 solution
+│       └── ...                  # More days
 ├── .claude/
+│   ├── commands/
+│   │   └── solve.md             # /solve slash command
 │   └── skills/
 │       ├── aoc-orchestrator/
 │       │   └── SKILL.md         # Main orchestration skill
@@ -125,8 +128,10 @@ aoc-2025/
 │       │   └── SKILL.md         # Fetch and parse puzzles
 │       ├── tdd-solver/
 │       │   └── SKILL.md         # TDD implementation skill
-│       └── submission-handler/
-│           └── SKILL.md         # Handle submissions and retries
+│       ├── submission-handler/
+│       │   └── SKILL.md         # Handle submissions and retries
+│       └── daily-reporter/
+│           └── SKILL.md         # Generate daily reports
 ├── puzzles/                     # Downloaded puzzle descriptions
 │   ├── day01/
 │   │   ├── puzzle.md
@@ -137,7 +142,7 @@ aoc-2025/
 
 ## AOC-CLI Integration
 
-This project heavily relies on `aoc-cli` for programmatic interaction with adventofcode.com:
+This project relies on `aoc-cli` for programmatic interaction with adventofcode.com:
 
 ### Key Commands Used
 
@@ -152,9 +157,6 @@ aoc submit <PART> <ANSWER> --day <DAY> --year 2025
 
 # Check calendar progress
 aoc calendar --year 2025
-
-# View private leaderboard (optional)
-aoc private-leaderboard <ID>
 ```
 
 ### Session Authentication
@@ -205,17 +207,20 @@ mod tests {
 When tests pass but submission fails:
 
 1. **Analyze Discrepancy**:
+
    - Compare test inputs vs real input
    - Look for edge cases not covered by examples
    - Check for input parsing issues
    - Verify integer overflow, off-by-one errors, etc.
 
 2. **Extract Wait Time**:
+
    - Parse AoC response for retry timeout
    - Common messages: "Please wait X minutes before trying again"
    - Extract duration and schedule retry
 
 3. **Implement Fix**:
+
    - Add new test cases for suspected edge cases
    - Fix implementation
    - Verify all tests still pass
@@ -226,64 +231,37 @@ When tests pass but submission fails:
    - Retry submission
    - Maximum retry attempts: 5 per part
 
-## Claude Skills Architecture
+## Claude Skills
 
-The automation is orchestrated through specialized Claude skills:
+The automation is orchestrated through specialized Claude Code skills:
 
 ### 1. **aoc-orchestrator**
+
 Main coordinator that manages the entire daily workflow from fetch to submission.
 
 ### 2. **puzzle-fetcher**
+
 Downloads puzzles using aoc-cli and parses Markdown to extract examples and requirements.
 
 ### 3. **tdd-solver**
+
 Implements solutions using TDD methodology, writing tests first and iterating until all pass.
 
 ### 4. **submission-handler**
+
 Manages answer submission, parses responses, and handles retry logic with intelligent backoff.
 
-## Automation Deployment
+### 5. **daily-reporter**
 
-### Local Cron Setup
-
-```bash
-# Edit crontab
-crontab -e
-
-# Run daily at 12:01 AM EST (5:01 AM UTC) during December
-1 5 1-25 12 * cd /path/to/aoc-2025 && /usr/local/bin/aoc-orchestrator-run
-```
-
-### Manual Execution
-
-```bash
-# Run orchestrator for specific day
-cargo run -- --day <DAY>
-
-# Run with debug output
-cargo run -- --day <DAY> --debug
-
-# Dry run (don't submit)
-cargo run -- --day <DAY> --dry-run
-```
+Generates daily status reports documenting the solving process and results.
 
 ## Goals & Success Metrics
 
-- ✅ Fully automated puzzle solving without manual intervention
-- ✅ Zero manual coding - agent writes all solutions
-- ✅ Test coverage: 100% of examples from puzzle descriptions
-- ✅ First submission success rate: Track and improve over 25 days
-- ✅ Retry success rate: Measure effectiveness of failure analysis
-- ✅ Average time to solve: From puzzle unlock to correct submission
-
-## Learning Outcomes
-
-This experiment explores:
-- Limits of agentic coding capabilities
-- Effectiveness of TDD in automated contexts
-- AI reasoning about edge cases and failures
-- Reliability of autonomous development workflows
-- Integration of AI with external CLIs and APIs
+- Fully automated puzzle solving without manual intervention
+- Zero manual coding - agent writes all solutions
+- Test coverage: 100% of examples from puzzle descriptions
+- First submission success rate: Track and improve over 25 days
+- Retry success rate: Measure effectiveness of failure analysis
 
 ## Safety & Rate Limiting
 
@@ -292,13 +270,3 @@ This experiment explores:
 - Rate limits: Maximum 1 submission per minute
 - Logs all interactions for debugging
 - Graceful degradation if automation fails
-
-## Future Enhancements
-
-- [ ] Multi-language support (Python, JavaScript, etc.)
-- [ ] Parallel testing of multiple solution approaches
-- [ ] Performance optimization tracking
-- [ ] Automatic code cleanup and refactoring
-- [ ] Integration with private leaderboards
-- [ ] Daily solution summary reports
-- [ ] Historical analysis of solving patterns
