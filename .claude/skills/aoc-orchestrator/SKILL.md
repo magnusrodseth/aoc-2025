@@ -17,11 +17,20 @@ This skill is the main coordinator for the automated Advent of Code workflow. It
 
 ## Workflow Steps
 
-### 1. Initialization
+### 0. Pre-flight Check: Is This Day Already Solved?
+
+**CRITICAL**: This MUST be the first step. Do not proceed if the puzzle is already complete.
+
+1. Run `aoc calendar --year 2025` to see progress (completed days show decorations/artwork)
+2. Check if report exists: `puzzles/day<DD>/report.md` - if it shows both parts completed, EXIT
+3. Check state file if it exists: `state/day<DD>.json`
+
+**If both parts are already solved**: DO NOT proceed. Report "Day X is already complete! Nothing to do." and EXIT.
+
+### 1. Initialization (only if not already complete)
 ```bash
 # Check current date and determine which day to solve
 # Verify session cookie is configured
-# Check if day already solved (prevent duplicate work)
 ```
 
 ### 2. Invoke Puzzle Fetcher Skill
