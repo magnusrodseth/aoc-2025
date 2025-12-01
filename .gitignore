@@ -6,6 +6,10 @@ Cargo.lock
 .adventofcode.session
 *.session
 
+# Environment variables (DO NOT COMMIT!)
+.env
+.env.*
+
 # Logs
 logs/
 *.log
