@@ -144,6 +144,25 @@ Each skill is documented in `.claude/skills/*/SKILL.md` with detailed instructio
 - **[CLAUDE.md](CLAUDE.md)** - Complete project documentation
 - **[.claude/skills/](.claude/skills/)** - Agent skill specifications
 
+## 2025 Progress
+
+| Day | Part 1 | Part 2 | Notes |
+|-----|--------|--------|-------|
+| 1 | ⭐ | ⭐ | Parsing and summation |
+| 2 | ⭐ | ⭐ | Pattern matching (invalid IDs) |
+| 3 | ⭐ | ⭐ | Greedy digit selection |
+| 4 | ⭐ | ⭐ | Grid traversal, iterative removal |
+| 5 | ⭐ | ⭐ | Range-based freshness checking |
+| 6 | ⭐ | ⭐ | Vertical column parsing |
+| 7 | ⭐ | ⭐ | |
+| 8 | ⭐ | ⭐ | Kruskal's MST with Union-Find |
+| 9 | ⭐ | ⭐ | Coordinate compression (perf fix) |
+| 10 | ⭐ | ⭐ | Integer LP - 3 attempts |
+| 11 | ⭐ | ⭐ | Graph paths with constraints |
+| 12 | ⭐ | ⭐ | Bin packing (final day) |
+
+**Stars: 24/24** ⭐
+
 ## AoC 2025 Schedule
 
 Advent of Code 2025 features puzzles December 1-25.

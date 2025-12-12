@@ -26,9 +26,9 @@ Each daily report follows a consistent format for easy parsing and analysis.
 
 ### File Location
 
-Reports are saved to: `reports/day{day:02}_report.md`
+Reports are saved to: `puzzles/day{day:02}/report.md`
 
-Example: `reports/day01_report.md`, `reports/day12_report.md`
+Example: `puzzles/day01/report.md`, `puzzles/day12/report.md`
 
 ### Report Template
 
@@ -443,10 +443,10 @@ enhancing natural language understanding of problem constraints."
 let report = generate_report(&data)?;
 
 // Write to file
-fs::write(format!("reports/day{:02}_report.md", day), report)?;
+fs::write(format!("puzzles/day{:02}/report.md", day), report)?;
 
 // Log completion
-println!("✅ Daily report generated: reports/day{:02}_report.md", day);
+println!("✅ Daily report generated: puzzles/day{:02}/report.md", day);
 ```
 
 ## Integration with Orchestrator
@@ -570,7 +570,7 @@ issues earlier.
 ## Output Locations
 
 Reports accessible at:
-- `reports/day01_report.md` through `reports/day12_report.md`
+- `puzzles/day01/report.md` through `puzzles/day12/report.md`
 - Summary: `reports/summary.md` (generated after all days)
 - Analysis: `reports/analysis.json` (machine-readable metrics)
 

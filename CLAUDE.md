@@ -270,3 +270,36 @@ Generates daily status reports documenting the solving process and results.
 - Rate limits: Maximum 1 submission per minute
 - Logs all interactions for debugging
 - Graceful degradation if automation fails
+
+## Lessons Learned
+
+### Common Algorithm Patterns
+
+| Pattern | When to Use | Example Days |
+|---------|-------------|--------------|
+| **Memoized DFS** | Graph traversal, path counting | Day 11 |
+| **Backtracking** | Constraint satisfaction, bin packing | Day 12 |
+| **Brute force** | Small input space (≤2^10 combinations) | Day 10 Part 1 |
+| **Greedy** | Locally optimal = globally optimal | Day 3 Part 2 |
+| **Union-Find** | Connected components, MST | Day 8 |
+| **Coordinate compression** | Large sparse coordinate spaces | Day 9 |
+| **Linear algebra** | Toggle systems, optimization | Day 10 |
+
+### Common Pitfalls
+
+1. **Integer overflow**: Start with `i64` or `u64` for large inputs. Day 3 Part 2 answer exceeded `i32::MAX`.
+
+2. **Performance assumptions**: Real input is often 100-1000x larger than examples. Day 9's flood-fill worked on examples but timed out on real input (96,000 × 96,000 coordinate space).
+
+3. **Semantic precision**: "Attempt the first N connections" ≠ "Make N successful connections" (Day 8). Read problem statements carefully.
+
+4. **GF(2) vs Integer arithmetic**: Binary toggle problems (lights out) use XOR/GF(2). Additive problems need integer LP. They look similar but require completely different algorithms (Day 10).
+
+5. **Part 2 key design**: When memoizing, Part 2 often requires extending the memo key (e.g., adding a bitmask for "must visit" constraints in Day 11).
+
+### Success Metrics (Days 1-12)
+
+- **First attempt success rate**: ~85% of submissions correct on first try
+- **Days requiring multiple attempts**: Day 10 Part 2 (3 attempts - integer LP)
+- **Days requiring optimization**: Day 9 (coordinate compression for performance)
+- **Common retry causes**: Integer overflow, off-by-one, misread problem statement
