@@ -226,16 +226,6 @@ Track metrics:
 - Comprehensive logging for debugging
 - Graceful degradation on failures
 
-## License
-
-MIT License - See LICENSE file for details
-
-## Acknowledgments
-
-- **Eric Wastl** for creating Advent of Code
-- **aoc-cli** maintainers for the excellent CLI tool
-- **Anthropic** for Claude Code
-
 ## Getting Help
 
 Issues with:
